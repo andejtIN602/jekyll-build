@@ -1,2 +1,5 @@
 # jekyll-build
-jekyll-build | Attendance | Prototype
+jekyll-build | attendance | prototype
+
+author: Jamie Anderson 
+---
