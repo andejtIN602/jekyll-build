@@ -17,7 +17,7 @@ $.ajax({
         //.isActive is a value within the api array that has a value of 'true' or 'false', only active sttudents taking 'IN790' are displayed in the role attendance.
         if ((data[i].class == 'IN790') || (data[i].isActive == 'true')) {    
             //Adds student name stream option and attendance mark into the table as individual coloumns. 
-            $("#sturole").append("<td><img src='{{ site.baseurl }}/assets/img/img_avatar.png' alt='avatar' width='500' height='600'>" + data[i].name.first + " " + data[i].name.last + tdstream + attendance); 
+            $("#sturole").append("<td><img src='{{ site.baseurl }}/assets/img/imgavatar.png' alt='avatar' width='500' height='600'>" + data[i].name.first + " " + data[i].name.last + tdstream + attendance); 
             counter++;  
             //for loop that loops through if conditions that will color code previous attendance based on the value of x being < data[i].attendance[x] this loop will check all previous attendance coloumns in a row and assign their color code class.
             for (var x = 0; x < data[i].attendance.length; x++) {  
