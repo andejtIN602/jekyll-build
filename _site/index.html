@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <style>
+        .header {
+    background-color: #F1F1F1;
+    text-align: center;
+    padding: 20px;
+    font-family: Arial, Helvetica, sans-serif;
+  }
+
+.absent{
+    background-color: red;
+}
+
+.streamopt {
+    text-align: center;
+}
+
+
+tbody{
+    width: fit-content;
+}
+
+table {
+    width: fit-content;
+    border: 1px solid #999;
+    border-collapse: collapse;
+}
+td {
+    border: 1px solid #999;
+}
+th {
+    border: 1px solid #999;
+}
+td select {
+    border:none;
+}
+
+#sturole {
+    width: 752px;
+    box-shadow: 0 0 5px silver;
+    min-height: 200px;
+    background: white;
+    padding: 20px;
+    font-family: Arial;
+    font-size: 15px;
+}
+    </style>
+</head>
+        <header class="header">
+    <h1>Student Attendance Screen</h1>
+</header>
+<body>
+    <main>
+        <form onload="checkprev()">
+    <table id="roletable">
+        <caption>Class: IN790</caption> 
+        <tbody id="sturole">
+            <tr>
+                <th id="th1" class="thead" colspan="1">Student</th>
+                <th id="th2" class="thead" colspan="1">Stream A/B</th>
+                <th id="th3" class="thead" colspan="1">Attendance</th>
+                <th id="th4" class="thead" colspan="4">Previous Attendance</th>
+            </tr>
+            <tr>
+                <th colspan="1"></th>
+                <th colspan="1">
+                    <select id="streamsel" onchange="streamcheck()">
+                        <option value="" selected="true">N/A</option>
+                        <option value="a">A</option>
+                        <option value="b">B</option>
+                    </select>
+                </th>
+                <th colspan="1"></th>
+                <th colspan="4"></th>
+            </tr>
+        </tbody>  
+    </table>  
+</form>
+    </main>
+    <script>
+        $.ajax({
+    url: 'https://gist.githubusercontent.com/eallenOP/b40fa9bba517ff258da395c79edd2477/raw/a8175e0b5c915d9e2d857a2f114704094ade22b9/attendance.json',
+    dataType: 'json',
+    success: function(data) {
+    console.log(data);
+    //Variables for previous attendance array.
+    var pc1 = 0, pc2 = 1, pc3 = 2, pc4 = 3;
+    //Variables for code to be inserted into table.
+    var tdstream = "<td class='streamopt'></td>"
+    var attendance = "<td><select><option value=''>N/A</option><option value='p'>Present</option><option value='l'>Late</option><option value='e'>Explained Abs</option><option value='a'>Absent</option></select></td>";
+    //Row count function.
+    var rowCount = $('#roletable >tbody >tr').length;
+    console.log(rowCount);
+    for (var i = 0; i < data.length; i++) {
+        if ((data[i].class == 'IN790') || (data[i].isActive == 'true')) {           
+                $("#sturole").append("<tr><td>" + data[i].name.first + " " + data[i].name.last + tdstream + attendance + 
+                "<td id='pa1'>" + data[i].attendance[pc1] +"</td><td id='pa2'>"+ data[i].attendance[pc2] +"</td><td id='pa3'>"+ data[i].attendance[pc3] +
+                "</td><td id='pa4'>"+ data[i].attendance[pc4] +  "</td></tr>");
+                if (data[i].attendance[pc1] == 'a') {
+                    $('.pa1').addClass('.absent')
+                }
+        }
+            
+        
+    };
+}
+});
+
+//streamcheck() on stream option change, all students are autofilled to that stream with assigned value.
+function streamcheck(){
+    var rowCount = $('#roletable >tbody >tr').length;
+    console.log("Row:", rowCount);
+    //If stream is selected as 'a' by the user, statement will perform. 
+    if (document.getElementById("streamsel").value == 'a'){
+        //Loops all rows in table for stream option.
+        for (var c = 0; c < rowCount; c++) {
+            //Replaces displayed stream value with 'a'.
+            $('.streamopt').replaceWith("<td class='streamopt'>a</td>")
+        }
+    }
+    //same as above, except value is 'b'.
+    else if (document.getElementById("streamsel").value == 'b'){
+        for (var c = 0; c < rowCount; c++) {
+            $('.streamopt').replaceWith("<td class='streamopt'>b</td>")
+        }
+    }
+    //same as above, except value is 'null'.
+    else if (document.getElementById("streamsel").value == ''){
+        for (var c = 0; c < rowCount; c++) {
+            $('.streamopt').replaceWith("<td class='streamopt'></td>")
+        }
+    }
+}
+
+
+
+    </script>
+        <footer>
+    
+</footer>
+</body>
+</html>
