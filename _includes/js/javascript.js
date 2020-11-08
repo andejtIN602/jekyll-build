@@ -3,25 +3,42 @@ $.ajax({
     dataType: 'json',
     success: function(data) {
     console.log(data);
-    //Variables for previous attendance array.
-    var pc1 = 0, pc2 = 1, pc3 = 2, pc4 = 3;
+    //*Debug variable
+    var counter = 0;  
     //Variables for code to be inserted into table.
-    var tdstream = "<td class='streamopt'></td>"
+    var tdstream = "<td class='streamopt'></td>";
     var attendance = "<td><select><option value=''>N/A</option><option value='p'>Present</option><option value='l'>Late</option><option value='e'>Explained Abs</option><option value='a'>Absent</option></select></td>";
-    //Row count function.
-    var rowCount = $('#roletable >tbody >tr').length;
-    console.log(rowCount);
     for (var i = 0; i < data.length; i++) {
-        if ((data[i].class == 'IN790') || (data[i].isActive == 'true')) {           
-                $("#sturole").append("<tr><td>" + data[i].name.first + " " + data[i].name.last + tdstream + attendance + 
-                "<td id='pa1'>" + data[i].attendance[pc1] +"</td><td id='pa2'>"+ data[i].attendance[pc2] +"</td><td id='pa3'>"+ data[i].attendance[pc3] +
-                "</td><td id='pa4'>"+ data[i].attendance[pc4] +  "</td></tr>");
-                if (data[i].attendance[pc1] == 'a') {
-                    $('.pa1').addClass('.absent')
+        $("#sturole").append("<tr>");
+        if ((data[i].class == 'IN790') || (data[i].isActive == 'true')) {     
+            $("#sturole").append("<td>" + data[i].name.first + " " + data[i].name.last + tdstream + attendance); 
+            counter++;  
+            for (var x = 0; x < data[i].attendance.length; x++) {  
+                //Conditon dictates the color coding of previous attendance
+                if (data[i].attendance[x] == "a" ) {
+                    console.log(data[i].attendance[x]);
+                    $("#sturole").append("<td class='absent'>" + data[i].attendance[x] + "</td>");
                 }
+                if (data[i].attendance[x] == "s") {
+                    console.log(data[i].attendance[x]);
+                    $("#sturole").append("<td class='sick'>" + data[i].attendance[x] + "</td>");
+                }
+                if (data[i].attendance[x] == "l") {
+                    console.log(data[i].attendance[x]);
+                    $("#sturole").append("<td class='late'>" + data[i].attendance[x] + "</td>");
+                }
+                if (data[i].attendance[x] == "p") {
+                    console.log(data[i].attendance[x]);
+                    $("#sturole").append("<td class='present'>" + data[i].attendance[x] + "</td>");
+                }
+                if (data[i].attendance[x] == "e") {
+                    console.log(data[i].attendance[x]);
+                    $("#sturole").append("<td class='sick'>" + data[i].attendance[x] + "</td>");
+                }
+                $("#sturole").append("</tr>");
         }
-            
-        
+        }
+            console.log("count:",counter);
     };
 }
 });
@@ -31,23 +48,23 @@ function streamcheck(){
     var rowCount = $('#roletable >tbody >tr').length;
     console.log("Row:", rowCount);
     //If stream is selected as 'a' by the user, statement will perform. 
-    if (document.getElementById("streamsel").value == 'a'){
+    if (document.getElementById("streamsel").value == 'A'){
         //Loops all rows in table for stream option.
         for (var c = 0; c < rowCount; c++) {
             //Replaces displayed stream value with 'a'.
-            $('.streamopt').replaceWith("<td class='streamopt'>a</td>")
+            $('.streamopt').replaceWith("<td class='streamopt'>A</td>");
         }
     }
     //same as above, except value is 'b'.
-    else if (document.getElementById("streamsel").value == 'b'){
+    else if (document.getElementById("streamsel").value == 'B'){
         for (var c = 0; c < rowCount; c++) {
-            $('.streamopt').replaceWith("<td class='streamopt'>b</td>")
+            $('.streamopt').replaceWith("<td class='streamopt'>B</td>");
         }
     }
     //same as above, except value is 'null'.
     else if (document.getElementById("streamsel").value == ''){
         for (var c = 0; c < rowCount; c++) {
-            $('.streamopt').replaceWith("<td class='streamopt'></td>")
+            $('.streamopt').replaceWith("<td class='streamopt'></td>");
         }
     }
 }
