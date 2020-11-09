@@ -6,10 +6,10 @@ $.ajax({
     //*debug
     console.log(data);
     //*debug variable
-    var counter = 0;  
+    var counter = 0;
     //Variables for code to be inserted into table.
     var tdstream = "<td class='streamopt'></td>";
-    var attendance = "<td><select><option value=''>N/A</option><option value='p'>Present</option><option value='l'>Late</option><option value='e'>Explained</option><option value='a'>Absent</option></select></td>";
+    var attendance = "<td><select id='attnmark' class='attnmark' onchange='attendanceCheck()'><option value='n'>N/A</option><option value='p'>Present</option><option value='l'>Late</option><option value='e'>Explained</option><option value='a'>Absent</option></select></td>";
     //for loop that builds table rows based on if conditions loop through each line of data     
     for (var i = 0; i < data.length; i++) {
         $("#sturole").append("<tr>");
@@ -17,7 +17,7 @@ $.ajax({
         //.isActive is a value within the api array that has a value of 'true' or 'false', only active sttudents taking 'IN790' are displayed in the role attendance.
         if ((data[i].class == 'IN790') || (data[i].isActive == 'true')) {    
             //Adds student name stream option and attendance mark into the table as individual coloumns. 
-            $("#sturole").append("<td><img src='{{ site.baseurl }}/assets/img/imgavatar.png' alt='avatar' width='500' height='600'>" + data[i].name.first + " " + data[i].name.last + tdstream + attendance); 
+            $("#sturole").append("<td>" + data[i].name.first + " " + data[i].name.last + tdstream + attendance); 
             counter++;  
             //for loop that loops through if conditions that will color code previous attendance based on the value of x being < data[i].attendance[x] this loop will check all previous attendance coloumns in a row and assign their color code class.
             for (var x = 0; x < data[i].attendance.length; x++) {  
@@ -59,16 +59,18 @@ $.ajax({
                 }
                 //Closes table row
                 $("#sturole").append("</tr>");
+            }
         }
-        }
-            //*debug
-            console.log("count:",counter);
+        //*debug
+        console.log("count:",counter);
     };
+        //Adds student count to bottom of table
+        $('#stats').replaceWith("<td colspan='3'> Students: " + counter + "</td>")
 }
 });
 
 //streamcheck() on stream option change, all students are autofilled to that stream with assigned value.
-function streamcheck(){
+function streamCheck(){
     var rowCount = $('#roletable >tbody >tr').length;
     console.log("Row:", rowCount);
     //If stream is selected as 'A' by the user, statement will perform. 
@@ -85,13 +87,17 @@ function streamcheck(){
             $('.streamopt').replaceWith("<td class='streamopt'>B</td>");
         }
     }
-    //same as above, except value is 'null'.
-    else if (document.getElementById("streamsel").value == ''){
+    //same as above, except value is equal 'n'.
+    else if (document.getElementById("streamsel").value == 'n'){
         for (var c = 0; c < rowCount; c++) {
-            //Returns null value visually represented by N/A
+            //Returns null value represented by an empty coloumn
             $('.streamopt').replaceWith("<td class='streamopt'></td>");
         }
     }
 }
 
+//User has to confirm they want to submit attendance
+function submitCheck() {
+    alert("Attendance submission successful");
+  }
 
